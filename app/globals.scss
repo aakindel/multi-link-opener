@@ -1,0 +1,32 @@
+@import "reset";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-neutral-200 focus-visible:bg-clip-border focus-visible:outline-neutral-700 dark:border-neutral-800 focus-visible:dark:outline-neutral-200;
+  }
+
+  :root {
+    @apply text-base;
+
+    ::selection {
+      @apply bg-black/10;
+    }
+
+    -webkit-tap-highlight-color: rgb(0 0 0 / 0.1);
+
+    &.dark {
+      ::selection {
+        @apply bg-white/10;
+      }
+
+      -webkit-tap-highlight-color: rgb(255 255 255 / 0.1);
+    }
+  }
+
+  body {
+    @apply min-h-screen bg-white text-base text-neutral-950 antialiased dark:bg-neutral-950 dark:text-neutral-50;
+  }
+}
