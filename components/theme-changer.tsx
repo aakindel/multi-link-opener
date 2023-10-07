@@ -3,8 +3,8 @@
 import React from "react";
 import { useTheme } from "next-themes";
 import useHasWindow from "@/hooks/useHasWindow";
-import { Button } from "../Button";
-import { Icons } from "../Icons";
+import { Button } from "./ui/button";
+import { Icons } from "./icons";
 
 const ThemeChanger = () => {
   const { resolvedTheme, setTheme } = useTheme();
@@ -19,18 +19,20 @@ const ThemeChanger = () => {
       {resolvedTheme === "light" ? (
         <Button
           variant="ghost"
-          className="pointer-events-auto flex h-9 w-9 items-center justify-center p-[6px] text-neutral-500 transition-none hover:bg-neutral-100 hover:text-neutral-500 dark:hover:bg-neutral-800 dark:hover:text-neutral-400"
+          className="h-9 w-9"
+          size="icon"
           onClick={changeTheme}
         >
-          <Icons.sun />
+          <Icons.sun className="mt-px h-[1.2rem] w-[1.2rem]" />
         </Button>
       ) : (
         <Button
           variant="ghost"
-          className="pointer-events-auto flex h-9 w-9 items-center justify-center p-[6px] text-neutral-500 transition-none hover:bg-neutral-100 hover:text-neutral-500 dark:hover:bg-neutral-800 dark:hover:text-neutral-400"
+          className="h-9 w-9"
+          size="icon"
           onClick={changeTheme}
         >
-          <Icons.moon />
+          <Icons.moon className="absolute mt-px h-[1.2rem] w-[1.2rem]" />
         </Button>
       )}
     </React.Fragment>
