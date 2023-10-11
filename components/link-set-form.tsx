@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { useLinkStore } from "@/app/store";
+import { v4 as uuidv4 } from "uuid";
 
 // https://stackoverflow.com/a/49283749 : check if link is valid
 const isValidLink = (link: string) => {
@@ -65,6 +67,8 @@ export default function AddLinkSetForm({
   addLinkSetFormRef: React.RefObject<HTMLFormElement>;
   closeDialog: () => void;
 }) {
+  const addLinkSet = useLinkStore((state) => state.addLinkSet);
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -75,6 +79,7 @@ export default function AddLinkSetForm({
 
   function onSubmit(data: ProfileFormValues) {
     console.log(JSON.stringify(data, null, 2));
+    addLinkSet({ id: uuidv4(), ...data });
     closeDialog();
   }
 
