@@ -99,7 +99,7 @@ const Home: NextPage = () => {
                         return (
                           <TabsTrigger
                             className={cn(
-                              "group/trigger relative h-full w-full justify-start rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none data-[state=active]:bg-neutral-100 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:data-[state=active]:bg-neutral-800"
+                              "group/trigger relative h-full w-full justify-start rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 data-[state=active]:bg-neutral-200/60 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:data-[state=active]:bg-neutral-800"
                             )}
                             key={index}
                             value={addedLinkSet.id}
@@ -116,27 +116,32 @@ const Home: NextPage = () => {
                 <></>
               )}
             </div>
-            <div className="flex h-full w-full flex-1 rounded-md border">
+            <div className="flex h-full w-full flex-1 overflow-hidden rounded-md border">
               {addedLinkSets.map((addedLinkSet, index) => {
                 return (
                   <TabsContent
                     className={cn(
-                      "mt-0 block h-full w-full px-3 py-2",
+                      "mt-0 block h-full w-full",
                       activeTab !== addedLinkSet.id && "hidden"
                     )}
                     key={index}
                     value={addedLinkSet.id}
                   >
-                    {addedLinkSet.links.map((linkSet, index) => {
-                      return (
-                        <span
-                          className="block text-sm text-neutral-900 dark:text-neutral-200"
-                          key={index}
-                        >
-                          {linkSet}
-                        </span>
-                      );
-                    })}
+                    <div className="w-full bg-neutral-200/50 px-3 py-1 text-sm dark:bg-neutral-800/60">
+                      {addedLinkSet.name}
+                    </div>
+                    <div className="w-full px-3 py-2">
+                      {addedLinkSet.links.map((linkSet, index) => {
+                        return (
+                          <span
+                            className="block text-sm text-neutral-900 dark:text-neutral-200"
+                            key={index}
+                          >
+                            {linkSet}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </TabsContent>
                 );
               })}
