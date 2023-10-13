@@ -99,13 +99,15 @@ const Home: NextPage = () => {
                         return (
                           <TabsTrigger
                             className={cn(
-                              "group/trigger relative h-full w-full justify-start rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 data-[state=active]:bg-neutral-200/60 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:data-[state=active]:bg-neutral-800"
+                              "group/trigger relative h-full w-full max-w-[300px] justify-start rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 data-[state=active]:bg-neutral-200/60 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:data-[state=active]:bg-neutral-800"
                             )}
                             key={index}
                             value={addedLinkSet.id}
                             title={addedLinkSet.name}
                           >
-                            {addedLinkSet.name}
+                            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                              {addedLinkSet.name}
+                            </span>
                           </TabsTrigger>
                         );
                       })}
