@@ -15,13 +15,20 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/utils";
-import { PlusCircleIcon } from "lucide-react";
+import {
+  PenSquareIcon,
+  PlayIcon,
+  PlusCircleIcon,
+  Trash2Icon,
+} from "lucide-react";
 import type { NextPage } from "next";
 import { useRef, useState } from "react";
 import { useLinkStore } from "./store";
+import { prefillLinks } from "./data";
 
 const Home: NextPage = () => {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
+  const setAddedLinkSets = useLinkStore((state) => state.setAddedLinkSets);
   const [activeTab, setActiveTab] = useState(
     addedLinkSets.length ? addedLinkSets[0].id : ""
   );
@@ -85,7 +92,16 @@ const Home: NextPage = () => {
                 </DialogContent>
               </Dialog>
               {!addedLinkSets.length && (
-                <Button variant="outline">(or prefill 5 demo link sets)</Button>
+                <Button
+                  variant="outline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAddedLinkSets([...prefillLinks]);
+                    setActiveTab(prefillLinks[0].id);
+                  }}
+                >
+                  (or prefill 5 demo link sets)
+                </Button>
               )}
               {addedLinkSets.length ? (
                 <ScrollArea className="h-full rounded-md border">
@@ -99,15 +115,38 @@ const Home: NextPage = () => {
                         return (
                           <TabsTrigger
                             className={cn(
-                              "group/trigger relative h-full w-full max-w-[300px] justify-start rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 data-[state=active]:bg-neutral-200/60 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:data-[state=active]:bg-neutral-800"
+                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 data-[state=active]:bg-neutral-200/60 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:data-[state=active]:bg-neutral-800"
                             )}
                             key={index}
                             value={addedLinkSet.id}
                             title={addedLinkSet.name}
                           >
-                            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
                               {addedLinkSet.name}
                             </span>
+                            <div className="hidden gap-1 group-hover/trigger:flex">
+                              <Button
+                                variant="ghost"
+                                className="h-6 w-6 shrink-0 hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
+                                size="icon"
+                              >
+                                <PlayIcon className="h-4 w-4 stroke-2" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                className="h-6 w-6 shrink-0 hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
+                                size="icon"
+                              >
+                                <PenSquareIcon className="h-4 w-4 stroke-2" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                className="h-6 w-6 shrink-0 hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
+                                size="icon"
+                              >
+                                <Trash2Icon className="h-4 w-4 stroke-2" />
+                              </Button>
+                            </div>
                           </TabsTrigger>
                         );
                       })}
