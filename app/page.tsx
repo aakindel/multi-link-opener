@@ -77,7 +77,6 @@ const Home: NextPage = () => {
       <div className="mx-auto flex h-[calc(100vh-57px)] w-full max-w-6xl items-center px-4 pt-0 sm:px-8">
         <Tabs
           className="flex h-full w-full items-center justify-center"
-          defaultValue={"key"}
           orientation="vertical"
           value={activeTab}
           onValueChange={(value) => {
@@ -96,7 +95,7 @@ const Home: NextPage = () => {
                     Add a Link Set
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="w-96 gap-3 p-4">
+                <DialogContent className="gap-3 p-4">
                   <DialogHeader className="mt-1 space-y-3">
                     <DialogTitle>Add Link Set</DialogTitle>
                     <DialogDescription>
@@ -111,7 +110,7 @@ const Home: NextPage = () => {
                       closeDialog={() => setShowAddLinkSetDialog(false)}
                     />
                   </div>
-                  <DialogFooter className="mt-1 sm:space-x-2.5">
+                  <DialogFooter className="mt-1">
                     <Button
                       variant="outline"
                       onClick={() => setShowAddLinkSetDialog(false)}
@@ -167,7 +166,7 @@ const Home: NextPage = () => {
                             <span className="pointer-events-none z-10 w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
                               {addedLinkSet.name}
                             </span>
-                            <div className="pointer-events-none z-10 hidden gap-1 group-hover/trigger:flex">
+                            <div className="pointer-events-none z-10 hidden gap-1 group-focus-within/trigger:flex group-hover/trigger:flex">
                               <TooltipButton
                                 icon={<PlayIcon className="h-4 w-4 stroke-2" />}
                                 tooltipText="Open Link Set"
