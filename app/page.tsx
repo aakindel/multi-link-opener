@@ -25,6 +25,42 @@ import type { NextPage } from "next";
 import { useRef, useState } from "react";
 import { useLinkStore } from "./store";
 import { prefillLinks } from "./data";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const TooltipButton = ({
+  icon,
+  tooltipText,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  tooltipText: string;
+  onClick?: () => void;
+}) => {
+  return (
+    <TooltipProvider delayDuration={250}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            className="pointer-events-auto h-6 w-6 shrink-0 hover:bg-neutral-300/80 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
+            size="icon"
+            onClick={onClick}
+          >
+            {icon}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="mb-0.5 animate-none select-none px-2 py-1 text-xs shadow-sm duration-0 data-[state=closed]:animate-none data-[state=closed]:duration-0 data-[state=closed]:fade-out-100 data-[state=closed]:zoom-out-100 data-[side=top]:slide-in-from-bottom-0 dark:bg-neutral-950">
+          <p>{tooltipText}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
 const Home: NextPage = () => {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
@@ -113,41 +149,43 @@ const Home: NextPage = () => {
                     >
                       {addedLinkSets.map((addedLinkSet, index) => {
                         return (
-                          <TabsTrigger
+                          <div
                             className={cn(
-                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 data-[state=active]:bg-neutral-200/60 data-[state=active]:text-neutral-950 data-[state=active]:shadow-none dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:data-[state=active]:bg-neutral-800"
+                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800",
+                              activeTab === addedLinkSet.id &&
+                                "bg-neutral-200/60 text-neutral-950 shadow-none dark:bg-neutral-800"
                             )}
                             key={index}
-                            value={addedLinkSet.id}
-                            title={addedLinkSet.name}
                           >
-                            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
+                            <TabsTrigger
+                              className={cn(
+                                "absolute bottom-0 left-0 right-0 top-0 z-0 flex h-full w-full bg-transparent data-[state=active]:bg-transparent dark:bg-transparent dark:data-[state=active]:bg-transparent"
+                              )}
+                              value={addedLinkSet.id}
+                              title={addedLinkSet.name}
+                            ></TabsTrigger>
+                            <span className="pointer-events-none z-10 w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
                               {addedLinkSet.name}
                             </span>
-                            <div className="hidden gap-1 group-hover/trigger:flex">
-                              <Button
-                                variant="ghost"
-                                className="h-6 w-6 shrink-0 hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
-                                size="icon"
-                              >
-                                <PlayIcon className="h-4 w-4 stroke-2" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                className="h-6 w-6 shrink-0 hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
-                                size="icon"
-                              >
-                                <PenSquareIcon className="h-4 w-4 stroke-2" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                className="h-6 w-6 shrink-0 hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-700 dark:hover:text-neutral-50"
-                                size="icon"
-                              >
-                                <Trash2Icon className="h-4 w-4 stroke-2" />
-                              </Button>
+                            <div className="pointer-events-none z-10 hidden gap-1 group-hover/trigger:flex">
+                              <TooltipButton
+                                icon={<PlayIcon className="h-4 w-4 stroke-2" />}
+                                tooltipText="Open Link Set"
+                              />
+                              <TooltipButton
+                                icon={
+                                  <PenSquareIcon className="h-4 w-4 stroke-2" />
+                                }
+                                tooltipText="Edit Link Set"
+                              />
+                              <TooltipButton
+                                icon={
+                                  <Trash2Icon className="h-4 w-4 stroke-2" />
+                                }
+                                tooltipText="Delete Link Set"
+                              />
                             </div>
-                          </TabsTrigger>
+                          </div>
                         );
                       })}
                     </TabsList>
