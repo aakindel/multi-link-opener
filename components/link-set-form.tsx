@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useLinkStore } from "@/app/store";
 import { v4 as uuidv4 } from "uuid";
+import { LinkSetType } from "@/types";
 
 // https://stackoverflow.com/a/49283749 : check if link is valid
 const isValidLink = (link: string) => {
@@ -60,7 +61,7 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-export default function AddLinkSetForm({
+export function AddLinkSetForm({
   addLinkSetFormRef,
   closeDialog,
 }: {
@@ -87,6 +88,76 @@ export default function AddLinkSetForm({
     <Form {...form}>
       <form
         ref={addLinkSetFormRef}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-3"
+      >
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="My Link Set" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="links"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Links</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Add each link on a separate line."
+                  className="h-48 max-h-80 resize-none sm:resize-y"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
+}
+
+export function EditLinkSetForm({
+  linkSet,
+  editLinkSetFormRef,
+  closeDialog,
+}: {
+  linkSet: LinkSetType;
+  editLinkSetFormRef: React.RefObject<HTMLFormElement>;
+  closeDialog: () => void;
+}) {
+  const editLinkSet = useLinkStore((state) => state.editLinkSet);
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      name: linkSet?.name ?? "",
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - 'links' is refined from string to string[]
+      links: linkSet?.links.join("\n") ?? "",
+    },
+    mode: "onChange",
+  });
+
+  function onSubmit(data: ProfileFormValues) {
+    console.log(JSON.stringify(data, null, 2));
+    editLinkSet({ id: linkSet.id, ...data });
+    closeDialog();
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        ref={editLinkSetFormRef}
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-3"
       >

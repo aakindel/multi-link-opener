@@ -1,6 +1,6 @@
 "use client";
 
-import LinkSetForm from "@/components/link-set-form";
+import { AddLinkSetForm } from "@/components/link-set-form";
 import { MainNav } from "@/components/main-nav";
 import { Button } from "@/components/ui/button";
 import {
@@ -105,7 +105,7 @@ const Home: NextPage = () => {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="flex flex-col gap-2">
-                    <LinkSetForm
+                    <AddLinkSetForm
                       addLinkSetFormRef={addLinkSetFormRef}
                       closeDialog={() => setShowAddLinkSetDialog(false)}
                     />
