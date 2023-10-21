@@ -1,26 +1,11 @@
 "use client";
 
-import { AddLinkSetForm, EditLinkSetForm } from "@/components/link-set-form";
 import { MainNav } from "@/components/main-nav";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/utils";
-import {
-  PenSquareIcon,
-  PlayIcon,
-  PlusCircleIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { PenSquareIcon, PlayIcon, Trash2Icon } from "lucide-react";
 import type { NextPage } from "next";
 import { useRef, useState } from "react";
 import { useLinkStore } from "./store";
@@ -32,6 +17,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LinkSetType } from "@/types";
+import {
+  AddLinkSetDialog,
+  EditLinkSetDialog,
+  DeleteLinkSetDialog,
+} from "@/components/link-set-dialog";
 
 const TooltipButton = ({
   icon,
@@ -63,108 +53,6 @@ const TooltipButton = ({
   );
 };
 
-const AddLinkSetDialog = ({
-  showAddLinkSetDialog,
-  setShowAddLinkSetDialog,
-  addLinkSetFormRef,
-}: {
-  showAddLinkSetDialog: boolean;
-  setShowAddLinkSetDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  addLinkSetFormRef: React.RefObject<HTMLFormElement>;
-}) => {
-  return (
-    <Dialog open={showAddLinkSetDialog} onOpenChange={setShowAddLinkSetDialog}>
-      <DialogTrigger asChild>
-        <Button className="shrink-0 gap-2">
-          <PlusCircleIcon className="h-5 w-5" />
-          Add a Link Set
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="gap-3 p-4">
-        <DialogHeader className="mt-1 space-y-3">
-          <DialogTitle>Add Link Set</DialogTitle>
-          <DialogDescription>
-            Name your link set and insert your web link(s) in the text area
-            below. Click the Add Link Set button when you&apos;re done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex flex-col gap-2">
-          <AddLinkSetForm
-            addLinkSetFormRef={addLinkSetFormRef}
-            closeDialog={() => setShowAddLinkSetDialog(false)}
-          />
-        </div>
-        <DialogFooter className="mt-1">
-          <Button
-            variant="outline"
-            onClick={() => setShowAddLinkSetDialog(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            onClick={() => addLinkSetFormRef.current?.requestSubmit()}
-          >
-            Add Link Set
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const EditLinkSetDialog = ({
-  linkSet,
-  showEditLinkSetDialog,
-  setShowEditLinkSetDialog,
-  editLinkSetFormRef,
-}: {
-  linkSet: LinkSetType | null;
-  showEditLinkSetDialog: boolean;
-  setShowEditLinkSetDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  editLinkSetFormRef: React.RefObject<HTMLFormElement>;
-}) => {
-  return (
-    linkSet && (
-      <Dialog
-        open={showEditLinkSetDialog}
-        onOpenChange={setShowEditLinkSetDialog}
-      >
-        <DialogContent className="gap-3 p-4">
-          <DialogHeader className="mt-1 space-y-3">
-            <DialogTitle>Edit Link Set</DialogTitle>
-            <DialogDescription>
-              Edit your link set name and link(s) below. Click the Save Changes
-              button when you&apos;re done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <EditLinkSetForm
-              linkSet={linkSet}
-              editLinkSetFormRef={editLinkSetFormRef}
-              closeDialog={() => setShowEditLinkSetDialog(false)}
-            />
-          </div>
-          <DialogFooter className="mt-1">
-            <Button
-              variant="outline"
-              onClick={() => setShowEditLinkSetDialog(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              onClick={() => editLinkSetFormRef.current?.requestSubmit()}
-            >
-              Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    )
-  );
-};
-
 const Home: NextPage = () => {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
   const setAddedLinkSets = useLinkStore((state) => state.setAddedLinkSets);
@@ -176,10 +64,15 @@ const Home: NextPage = () => {
   const [showAddLinkSetDialog, setShowAddLinkSetDialog] = useState(false);
 
   const editLinkSetFormRef = useRef<HTMLFormElement>(null);
+  const [showEditLinkSetDialog, setShowEditLinkSetDialog] = useState(false);
   const [editingLinkset, setEditingLinkset] = useState<LinkSetType | null>(
     null
   );
-  const [showEditLinkSetDialog, setShowEditLinkSetDialog] = useState(false);
+
+  const [showDeleteLinkSetDialog, setShowDeleteLinkSetDialog] = useState(false);
+  const [deletingLinkset, setDeletingLinkset] = useState<LinkSetType | null>(
+    null
+  );
 
   return (
     <div className="mx-auto min-h-screen w-full">
@@ -205,6 +98,12 @@ const Home: NextPage = () => {
                 showEditLinkSetDialog={showEditLinkSetDialog}
                 setShowEditLinkSetDialog={setShowEditLinkSetDialog}
                 editLinkSetFormRef={editLinkSetFormRef}
+              />
+              <DeleteLinkSetDialog
+                linkSet={deletingLinkset}
+                showDeleteLinkSetDialog={showDeleteLinkSetDialog}
+                setShowDeleteLinkSetDialog={setShowDeleteLinkSetDialog}
+                setActiveTab={setActiveTab}
               />
               {!addedLinkSets.length && (
                 <Button
@@ -266,6 +165,10 @@ const Home: NextPage = () => {
                                   <Trash2Icon className="h-4 w-4 stroke-2" />
                                 }
                                 tooltipText="Delete Link Set"
+                                onClick={() => {
+                                  setDeletingLinkset(addedLinkSet);
+                                  setShowDeleteLinkSetDialog(true);
+                                }}
                               />
                             </div>
                           </div>
