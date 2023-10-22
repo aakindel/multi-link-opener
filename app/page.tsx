@@ -149,6 +149,13 @@ const Home: NextPage = () => {
                               <TooltipButton
                                 icon={<PlayIcon className="h-4 w-4 stroke-2" />}
                                 tooltipText="Open Link Set"
+                                onClick={() => {
+                                  if (typeof window !== "undefined") {
+                                    for (const link of addedLinkSet.links) {
+                                      window?.open(link, "_blank")?.focus();
+                                    }
+                                  }
+                                }}
                               />
                               <TooltipButton
                                 icon={
