@@ -17,6 +17,7 @@ import {
   DeleteLinkSetDialog,
 } from "@/components/link-set-dialog";
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
+import { EnablePopUpsAlert } from "@/components/enable-pop-ups-alert";
 
 const Home: NextPage = () => {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
@@ -24,6 +25,9 @@ const Home: NextPage = () => {
   const [activeTab, setActiveTab] = useState(
     addedLinkSets.length ? addedLinkSets[0].id : ""
   );
+  const [userHasClosedAlert, setUserHasClosedAlert] = useState<boolean>(false);
+  const [shouldShowEnablePopUpsAlert, setShouldShowEnablePopUpsAlert] =
+    useState<boolean>(false);
 
   const addLinkSetFormRef = useRef<HTMLFormElement>(null);
   const [showAddLinkSetDialog, setShowAddLinkSetDialog] = useState(false);
@@ -44,13 +48,19 @@ const Home: NextPage = () => {
       <MainNav />
       <div className="mx-auto flex h-[calc(100vh-57px)] w-full max-w-6xl items-center px-4 pt-0 sm:px-8">
         <Tabs
-          className="flex h-full w-full items-center justify-center"
+          className="flex h-full w-full flex-col items-center justify-center"
           orientation="vertical"
           value={activeTab}
           onValueChange={(value) => {
             setActiveTab(value);
           }}
         >
+          {shouldShowEnablePopUpsAlert && !userHasClosedAlert && (
+            <EnablePopUpsAlert
+              setShouldShowEnablePopUpsAlert={setShouldShowEnablePopUpsAlert}
+              setUserHasClosedAlert={setUserHasClosedAlert}
+            />
+          )}
           <div className="flex h-[80%] w-full gap-4">
             <div className="flex h-full w-[300px] shrink-0 flex-col gap-2">
               <AddLinkSetDialog
@@ -120,6 +130,7 @@ const Home: NextPage = () => {
                                       window?.open(link, "_blank")?.focus();
                                     }
                                   }
+                                  setShouldShowEnablePopUpsAlert(true);
                                 }}
                               />
                               <TooltipIconButton
