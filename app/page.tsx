@@ -106,7 +106,7 @@ const Home: NextPage = () => {
                             className={cn(
                               "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800",
                               activeTab === addedLinkSet.id &&
-                                "bg-neutral-200/60 text-neutral-950 shadow-none dark:bg-neutral-800"
+                                "bg-neutral-200/60 text-neutral-950 shadow-none dark:bg-neutral-800 dark:text-neutral-200"
                             )}
                             key={index}
                           >
@@ -117,10 +117,21 @@ const Home: NextPage = () => {
                               value={addedLinkSet.id}
                               title={addedLinkSet.name}
                             ></TabsTrigger>
-                            <span className="pointer-events-none z-10 w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
-                              {addedLinkSet.name}
-                            </span>
-                            <div className="pointer-events-none z-10 hidden gap-1 group-focus-within/trigger:flex group-hover/trigger:flex">
+                            <div className="flex w-full max-w-[300px] flex-col overflow-hidden">
+                              <span className="pointer-events-none z-10 w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
+                                {addedLinkSet.name}
+                              </span>
+                              <span
+                                className={cn(
+                                  "pointer-events-none z-10 w-full overflow-hidden text-ellipsis whitespace-nowrap text-left text-xs text-neutral-400 dark:text-neutral-500",
+                                  activeTab === addedLinkSet.id &&
+                                    "text-neutral-500 dark:text-neutral-400"
+                                )}
+                              >
+                                {addedLinkSet.links.length} links
+                              </span>
+                            </div>
+                            <div className="pointer-events-none z-10 hidden gap-1 text-neutral-500 group-focus-within/trigger:flex group-hover/trigger:flex dark:text-neutral-400">
                               <TooltipIconButton
                                 icon={<PlayIcon className="h-4 w-4 stroke-2" />}
                                 tooltipText="Open Link Set"
