@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/utils";
-import { PenSquareIcon, PlayIcon, Trash2Icon } from "lucide-react";
+import { LinkIcon, PenSquareIcon, PlayIcon, Trash2Icon } from "lucide-react";
 import type { NextPage } from "next";
 import { useRef, useState } from "react";
 import { useLinkStore } from "./store";
@@ -104,15 +104,15 @@ const Home: NextPage = () => {
                         return (
                           <div
                             className={cn(
-                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-50 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800",
+                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-100/60 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800",
                               activeTab === addedLinkSet.id &&
-                                "bg-neutral-200/60 text-neutral-950 shadow-none dark:bg-neutral-800 dark:text-neutral-200"
+                                "bg-neutral-200/60 text-neutral-950 dark:bg-neutral-800 dark:text-neutral-200"
                             )}
                             key={index}
                           >
                             <TabsTrigger
                               className={cn(
-                                "absolute bottom-0 left-0 right-0 top-0 z-0 flex h-full w-full bg-transparent data-[state=active]:bg-transparent dark:bg-transparent dark:data-[state=active]:bg-transparent"
+                                "absolute bottom-0 left-0 right-0 top-0 z-0 flex h-full w-full bg-transparent shadow-none data-[state=active]:bg-transparent data-[state=active]:shadow-none dark:bg-transparent dark:data-[state=active]:bg-transparent"
                               )}
                               value={addedLinkSet.id}
                               title={addedLinkSet.name}
@@ -176,34 +176,45 @@ const Home: NextPage = () => {
               )}
             </div>
             <div className="flex h-full w-full flex-1 overflow-hidden rounded-md border">
-              {addedLinkSets.map((addedLinkSet, index) => {
-                return (
-                  <TabsContent
-                    className={cn(
-                      "mt-0 block h-full w-full",
-                      activeTab !== addedLinkSet.id && "hidden"
-                    )}
-                    key={index}
-                    value={addedLinkSet.id}
-                  >
-                    <div className="w-full bg-neutral-200/50 px-3 py-1 text-sm dark:bg-neutral-800/60">
-                      {addedLinkSet.name}
-                    </div>
-                    <div className="w-full px-3 py-2">
-                      {addedLinkSet.links.map((linkSet, index) => {
-                        return (
-                          <span
-                            className="block text-sm text-neutral-900 dark:text-neutral-200"
-                            key={index}
-                          >
-                            {linkSet}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </TabsContent>
-                );
-              })}
+              {addedLinkSets.length ? (
+                addedLinkSets.map((addedLinkSet, index) => {
+                  return (
+                    <TabsContent
+                      className={cn(
+                        "mt-0 block h-full w-full",
+                        activeTab !== addedLinkSet.id && "hidden"
+                      )}
+                      key={index}
+                      value={addedLinkSet.id}
+                    >
+                      <div className="w-full bg-neutral-200/50 px-3 py-1 text-sm dark:bg-neutral-800/60">
+                        {addedLinkSet.name}
+                      </div>
+                      <div className="w-full px-3 py-2">
+                        {addedLinkSet.links.map((linkSet, index) => {
+                          return (
+                            <span
+                              className="block text-sm text-neutral-900 dark:text-neutral-200"
+                              key={index}
+                            >
+                              {linkSet}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </TabsContent>
+                  );
+                })
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-neutral-400 dark:text-neutral-500">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border">
+                    <LinkIcon className="h-5 w-5" />
+                  </div>
+                  <span className="block text-[15px]">
+                    Your links will appear here.
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </Tabs>
