@@ -62,10 +62,14 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export function AddLinkSetForm({
+  setActiveTab,
   addLinkSetFormRef,
+  scrollAreaViewportRef,
   closeDialog,
 }: {
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
   addLinkSetFormRef: React.RefObject<HTMLFormElement>;
+  scrollAreaViewportRef: React.RefObject<HTMLDivElement>;
   closeDialog: () => void;
 }) {
   const addLinkSet = useLinkStore((state) => state.addLinkSet);
@@ -79,8 +83,16 @@ export function AddLinkSetForm({
   });
 
   function onSubmit(data: ProfileFormValues) {
-    console.log(JSON.stringify(data, null, 2));
-    addLinkSet({ id: uuidv4(), ...data });
+    const newLinkSetID = uuidv4();
+    addLinkSet({ id: newLinkSetID, ...data });
+    setTimeout(() => {
+      if (scrollAreaViewportRef.current) {
+        // scroll scrollAreaViewport to bottom when new link set is added
+        scrollAreaViewportRef.current.scrollTop =
+          scrollAreaViewportRef.current.scrollHeight;
+      }
+      setActiveTab(newLinkSetID);
+    }, 0);
     closeDialog();
   }
 
@@ -149,7 +161,6 @@ export function EditLinkSetForm({
   });
 
   function onSubmit(data: ProfileFormValues) {
-    console.log(JSON.stringify(data, null, 2));
     editLinkSet({ id: linkSet.id, ...data });
     closeDialog();
   }

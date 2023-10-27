@@ -29,6 +29,8 @@ const Home: NextPage = () => {
   const [shouldShowEnablePopUpsAlert, setShouldShowEnablePopUpsAlert] =
     useState<boolean>(false);
 
+  const scrollAreaViewportRef = useRef<HTMLDivElement>(null);
+
   const addLinkSetFormRef = useRef<HTMLFormElement>(null);
   const [showAddLinkSetDialog, setShowAddLinkSetDialog] = useState(false);
 
@@ -62,11 +64,13 @@ const Home: NextPage = () => {
             />
           )}
           <div className="flex h-[80%] w-full gap-4">
-            <div className="flex h-full w-[300px] shrink-0 flex-col gap-2">
+            <div className="flex h-full max-h-[1000px] w-[300px] shrink-0 flex-col gap-2">
               <AddLinkSetDialog
                 showAddLinkSetDialog={showAddLinkSetDialog}
                 setShowAddLinkSetDialog={setShowAddLinkSetDialog}
                 addLinkSetFormRef={addLinkSetFormRef}
+                scrollAreaViewportRef={scrollAreaViewportRef}
+                setActiveTab={setActiveTab}
               />
               <EditLinkSetDialog
                 linkSet={editingLinkset}
@@ -93,7 +97,10 @@ const Home: NextPage = () => {
                 </Button>
               )}
               {addedLinkSets.length ? (
-                <ScrollArea className="h-full rounded-md border">
+                <ScrollArea
+                  viewportRef={scrollAreaViewportRef}
+                  className="h-full rounded-md border"
+                >
                   {
                     <TabsList
                       className={cn(
@@ -104,9 +111,9 @@ const Home: NextPage = () => {
                         return (
                           <div
                             className={cn(
-                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-100/60 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800",
+                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-100/60 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900/80 dark:text-neutral-400 dark:hover:bg-neutral-800/80",
                               activeTab === addedLinkSet.id &&
-                                "bg-neutral-200/60 text-neutral-950 dark:bg-neutral-800 dark:text-neutral-200"
+                                "bg-neutral-200/60 text-neutral-950 dark:bg-neutral-800/80 dark:text-neutral-200"
                             )}
                             key={index}
                           >
@@ -175,7 +182,7 @@ const Home: NextPage = () => {
                 <></>
               )}
             </div>
-            <div className="flex h-full w-full flex-1 overflow-hidden rounded-md border">
+            <div className="flex h-full max-h-[1000px] w-full flex-1 overflow-hidden rounded-md border">
               {addedLinkSets.length ? (
                 addedLinkSets.map((addedLinkSet, index) => {
                   return (

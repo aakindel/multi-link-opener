@@ -21,10 +21,14 @@ export function AddLinkSetDialog({
   showAddLinkSetDialog,
   setShowAddLinkSetDialog,
   addLinkSetFormRef,
+  scrollAreaViewportRef,
+  setActiveTab,
 }: {
   showAddLinkSetDialog: boolean;
   setShowAddLinkSetDialog: React.Dispatch<React.SetStateAction<boolean>>;
   addLinkSetFormRef: React.RefObject<HTMLFormElement>;
+  scrollAreaViewportRef: React.RefObject<HTMLDivElement>;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
     <Dialog open={showAddLinkSetDialog} onOpenChange={setShowAddLinkSetDialog}>
@@ -44,7 +48,9 @@ export function AddLinkSetDialog({
         </DialogHeader>
         <div className="flex flex-col gap-2">
           <AddLinkSetForm
+            setActiveTab={setActiveTab}
             addLinkSetFormRef={addLinkSetFormRef}
+            scrollAreaViewportRef={scrollAreaViewportRef}
             closeDialog={() => setShowAddLinkSetDialog(false)}
           />
         </div>
