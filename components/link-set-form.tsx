@@ -67,7 +67,7 @@ export function AddLinkSetForm({
   scrollAreaViewportRef,
   closeDialog,
 }: {
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  setActiveTab: (linkSetID: string) => void;
   addLinkSetFormRef: React.RefObject<HTMLFormElement>;
   scrollAreaViewportRef: React.RefObject<HTMLDivElement>;
   closeDialog: () => void;

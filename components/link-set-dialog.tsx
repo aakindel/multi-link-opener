@@ -28,7 +28,7 @@ export function AddLinkSetDialog({
   setShowAddLinkSetDialog: React.Dispatch<React.SetStateAction<boolean>>;
   addLinkSetFormRef: React.RefObject<HTMLFormElement>;
   scrollAreaViewportRef: React.RefObject<HTMLDivElement>;
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  setActiveTab: (linkSetID: string) => void;
 }) {
   return (
     <Dialog open={showAddLinkSetDialog} onOpenChange={setShowAddLinkSetDialog}>
@@ -38,7 +38,7 @@ export function AddLinkSetDialog({
           Add a Link Set
         </Button>
       </DialogTrigger>
-      <DialogContent className="gap-3 p-4">
+      <DialogContent className="max-w-xl gap-3 p-4">
         <DialogHeader className="mt-1 space-y-3">
           <DialogTitle>Add Link Set</DialogTitle>
           <DialogDescription>
@@ -136,7 +136,7 @@ export function DeleteLinkSetDialog({
   showDeleteLinkSetDialog: boolean;
   setShowDeleteLinkSetDialog: React.Dispatch<React.SetStateAction<boolean>>;
   activeTab: string;
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  setActiveTab: (linkSetID: string) => void;
 }) {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
   const deleteLinkSet = useLinkStore((state) => state.deleteLinkSet);

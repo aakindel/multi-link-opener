@@ -22,9 +22,10 @@ import { EnablePopUpsAlert } from "@/components/enable-pop-ups-alert";
 const Home: NextPage = () => {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
   const setAddedLinkSets = useLinkStore((state) => state.setAddedLinkSets);
-  const [activeTab, setActiveTab] = useState(
-    addedLinkSets.length ? addedLinkSets[0].id : ""
-  );
+
+  const activeTab = useLinkStore((state) => state.activeTab);
+  const setActiveTab = useLinkStore((state) => state.setActiveTab);
+
   const [userHasClosedAlert, setUserHasClosedAlert] = useState<boolean>(false);
   const [shouldShowEnablePopUpsAlert, setShouldShowEnablePopUpsAlert] =
     useState<boolean>(false);
