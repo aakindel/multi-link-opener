@@ -82,6 +82,7 @@ const Home: NextPage = () => {
                 linkSet={deletingLinkset}
                 showDeleteLinkSetDialog={showDeleteLinkSetDialog}
                 setShowDeleteLinkSetDialog={setShowDeleteLinkSetDialog}
+                activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
               {!addedLinkSets.length && (

@@ -129,11 +129,13 @@ export function DeleteLinkSetDialog({
   linkSet,
   showDeleteLinkSetDialog,
   setShowDeleteLinkSetDialog,
+  activeTab,
   setActiveTab,
 }: {
   linkSet: LinkSetType | null;
   showDeleteLinkSetDialog: boolean;
   setShowDeleteLinkSetDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
@@ -167,10 +169,14 @@ export function DeleteLinkSetDialog({
               onClick={() => {
                 deleteLinkSet(linkSet);
                 setShowDeleteLinkSetDialog(false);
-                if (addedLinkSets.length > 1) {
-                  linkSet.id === addedLinkSets[0].id
-                    ? setActiveTab(addedLinkSets[1].id)
-                    : setActiveTab(addedLinkSets[0].id);
+                // change active tab if more than one link set & active tab is deleted
+                if (addedLinkSets.length > 1 && linkSet.id === activeTab) {
+                  const linkSetIndex = addedLinkSets.findIndex(
+                    (addedLinkSet) => addedLinkSet.id === linkSet.id
+                  );
+                  linkSetIndex === addedLinkSets.length - 1
+                    ? setActiveTab(addedLinkSets[linkSetIndex - 1].id)
+                    : setActiveTab(addedLinkSets[linkSetIndex + 1].id);
                 }
               }}
             >
