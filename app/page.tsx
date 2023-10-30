@@ -8,7 +8,7 @@ import { cn } from "@/utils";
 import { LinkIcon, PenSquareIcon, PlayIcon, Trash2Icon } from "lucide-react";
 import type { NextPage } from "next";
 import { useRef, useState } from "react";
-import { useLinkStore } from "./store";
+import { useLinkStore, useLinkStoreHydration } from "./store";
 import { prefillLinks } from "./data";
 import { LinkSetType } from "@/types";
 import {
@@ -18,8 +18,10 @@ import {
 } from "@/components/link-set-dialog";
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
 import { EnablePopUpsAlert } from "@/components/enable-pop-ups-alert";
+import { Icons } from "@/components/icons";
 
 const Home: NextPage = () => {
+  const isLinkStoreHydrated = useLinkStoreHydration();
   const addedLinkSets = useLinkStore((state) => state.addedLinkSets);
   const setAddedLinkSets = useLinkStore((state) => state.setAddedLinkSets);
 
@@ -46,7 +48,7 @@ const Home: NextPage = () => {
     null
   );
 
-  return (
+  return isLinkStoreHydrated ? (
     <div className="mx-auto min-h-screen w-full">
       <MainNav />
       <div className="mx-auto flex h-[calc(100vh-57px)] w-full max-w-6xl items-center px-4 pt-0 sm:px-8">
@@ -228,6 +230,13 @@ const Home: NextPage = () => {
           </div>
         </Tabs>
       </div>
+    </div>
+  ) : (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-3">
+      <Icons.spinner className="h-7 w-7 text-neutral-400 dark:text-neutral-500" />
+      <span className="block text-sm text-neutral-400 dark:text-neutral-500">
+        Loading Multi Link Opener...
+      </span>
     </div>
   );
 };
