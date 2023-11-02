@@ -12,6 +12,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { AddLinkSetForm, EditLinkSetForm } from "@/components/link-set-form";
 import { PlusCircleIcon } from "lucide-react";
 import { LinkSetType } from "@/types";
@@ -186,5 +195,44 @@ export function DeleteLinkSetDialog({
         </DialogContent>
       </Dialog>
     )
+  );
+}
+
+export function DeleteAllLinkSetsDialog({
+  showDeleteAllLinkSetsDialog,
+  setShowDeleteAllLinkSetsDialog,
+}: {
+  showDeleteAllLinkSetsDialog: boolean;
+  setShowDeleteAllLinkSetsDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const setAddedLinkSets = useLinkStore((state) => state.setAddedLinkSets);
+
+  return (
+    <AlertDialog
+      open={showDeleteAllLinkSetsDialog}
+      onOpenChange={setShowDeleteAllLinkSetsDialog}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete all link sets?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. All the link sets you&apos;ve added
+            will no longer be accessible.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              setAddedLinkSets([]);
+              setShowDeleteAllLinkSetsDialog(false);
+            }}
+          >
+            Delete
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
