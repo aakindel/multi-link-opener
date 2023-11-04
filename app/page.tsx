@@ -19,6 +19,7 @@ import {
 import { TooltipIconButton } from "@/components/tooltip-icon-button";
 import { EnablePopUpsAlert } from "@/components/enable-pop-ups-alert";
 import { Icons } from "@/components/icons";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const isLinkStoreHydrated = useLinkStoreHydration();
@@ -202,14 +203,13 @@ const Home: NextPage = () => {
                         {addedLinkSet.name}
                       </div>
                       <div className="w-full px-3 py-2">
-                        {addedLinkSet.links.map((linkSet, index) => {
+                        {addedLinkSet.links.map((link, index) => {
                           return (
-                            <span
-                              className="block text-sm text-neutral-900 dark:text-neutral-200"
-                              key={index}
-                            >
-                              {linkSet}
-                            </span>
+                            <Link key={index} href={link} target="_blank">
+                              <span className="block text-sm text-neutral-900 underline hover:text-neutral-500 dark:text-neutral-200 dark:hover:text-neutral-400">
+                                {link}
+                              </span>
+                            </Link>
                           );
                         })}
                       </div>
