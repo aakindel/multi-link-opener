@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/utils";
 import { LinkIcon, PenSquareIcon, PlayIcon, Trash2Icon } from "lucide-react";
 import type { NextPage } from "next";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useLinkStore, useLinkStoreHydration } from "./store";
 import { prefillLinks } from "./data";
 import { LinkSetType } from "@/types";
@@ -20,6 +20,7 @@ import { TooltipIconButton } from "@/components/tooltip-icon-button";
 import { EnablePopUpsAlert } from "@/components/enable-pop-ups-alert";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
+import { useElementDimensions } from "@/hooks/useElementDimensions";
 
 const Home: NextPage = () => {
   const isLinkStoreHydrated = useLinkStoreHydration();
@@ -34,6 +35,20 @@ const Home: NextPage = () => {
     useState<boolean>(false);
 
   const scrollAreaViewportRef = useRef<HTMLDivElement>(null);
+
+  const [scrollAreaElem, setScrollAreaElem] = useState<HTMLDivElement | null>(
+    null
+  );
+  const scrollAreaRef = useCallback((node: HTMLDivElement) => {
+    if (node !== null) {
+      setScrollAreaElem(node);
+    }
+  }, []);
+
+  // get scroll area width (that updates on page resize)
+  const { elemWidth: scrollAreaElemWidth } = useElementDimensions(
+    scrollAreaElem as HTMLElement
+  );
 
   const addLinkSetFormRef = useRef<HTMLFormElement>(null);
   const [showAddLinkSetDialog, setShowAddLinkSetDialog] = useState(false);
@@ -67,8 +82,8 @@ const Home: NextPage = () => {
               setUserHasClosedAlert={setUserHasClosedAlert}
             />
           )}
-          <div className="flex h-[80%] w-full gap-4">
-            <div className="flex h-full max-h-[1000px] w-[300px] shrink-0 flex-col gap-2">
+          <div className="flex h-[90%] w-full gap-4 sm:h-[80%]">
+            <div className="flex h-full max-h-[1000px] w-full shrink-0 flex-col gap-4 sm:w-[300px] sm:gap-2">
               <AddLinkSetDialog
                 showAddLinkSetDialog={showAddLinkSetDialog}
                 setShowAddLinkSetDialog={setShowAddLinkSetDialog}
@@ -103,6 +118,7 @@ const Home: NextPage = () => {
               )}
               {addedLinkSets.length ? (
                 <ScrollArea
+                  ref={scrollAreaRef}
                   viewportRef={scrollAreaViewportRef}
                   className="h-full rounded-md border"
                 >
@@ -116,10 +132,17 @@ const Home: NextPage = () => {
                         return (
                           <div
                             className={cn(
-                              "group/trigger relative flex h-full w-full max-w-[300px] items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-100/60 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900/80 dark:text-neutral-400 dark:hover:bg-neutral-800/80",
+                              "group/trigger relative flex h-full w-full max-w-full items-center justify-start gap-1 rounded-none border-x-0 border-b-0 border-t-0 border-solid border-b-transparent bg-neutral-100/60 px-4 py-3 text-sm font-medium text-neutral-500 shadow-none transition-none hover:bg-neutral-200/60 dark:bg-neutral-900/80 dark:text-neutral-400 dark:hover:bg-neutral-800/80",
                               activeTab === addedLinkSet.id &&
                                 "bg-neutral-200/60 text-neutral-950 dark:bg-neutral-800/80 dark:text-neutral-200"
                             )}
+                            style={{
+                              maxWidth:
+                                scrollAreaElemWidth > 0
+                                  ? // "- 2" b/c the viewport is 1px in on either side b/c of border
+                                    `${scrollAreaElemWidth - 2}px`
+                                  : `${scrollAreaElem?.offsetWidth}px`,
+                            }}
                             key={index}
                           >
                             <TabsTrigger
@@ -129,7 +152,7 @@ const Home: NextPage = () => {
                               value={addedLinkSet.id}
                               title={addedLinkSet.name}
                             ></TabsTrigger>
-                            <div className="flex w-full max-w-[300px] flex-col overflow-hidden">
+                            <div className="flex w-full max-w-full shrink flex-col overflow-hidden">
                               <span className="pointer-events-none z-10 w-full overflow-hidden text-ellipsis whitespace-nowrap text-left leading-6">
                                 {addedLinkSet.name}
                               </span>
@@ -143,7 +166,7 @@ const Home: NextPage = () => {
                                 {addedLinkSet.links.length} links
                               </span>
                             </div>
-                            <div className="pointer-events-none z-10 hidden gap-1 text-neutral-500 group-focus-within/trigger:flex group-hover/trigger:flex dark:text-neutral-400">
+                            <div className="pointer-events-none z-10 hidden shrink-0 gap-1 text-neutral-500 group-focus-within/trigger:flex group-hover/trigger:flex dark:text-neutral-400">
                               <TooltipIconButton
                                 icon={<PlayIcon className="h-4 w-4 stroke-2" />}
                                 tooltipText="Open Link Set"
@@ -187,7 +210,7 @@ const Home: NextPage = () => {
                 <></>
               )}
             </div>
-            <div className="flex h-full max-h-[1000px] w-full flex-1 overflow-hidden rounded-md border">
+            <div className="hidden h-full max-h-[1000px] w-full flex-1 overflow-hidden rounded-md border sm:flex">
               {addedLinkSets.length ? (
                 addedLinkSets.map((addedLinkSet, index) => {
                   return (
@@ -205,8 +228,13 @@ const Home: NextPage = () => {
                       <div className="w-full px-3 py-2">
                         {addedLinkSet.links.map((link, index) => {
                           return (
-                            <Link key={index} href={link} target="_blank">
-                              <span className="block text-sm text-neutral-900 underline hover:text-neutral-500 dark:text-neutral-200 dark:hover:text-neutral-400">
+                            <Link
+                              key={index}
+                              href={link}
+                              className="w-fit"
+                              target="_blank"
+                            >
+                              <span className="block w-fit text-sm text-neutral-900 underline hover:text-neutral-500 dark:text-neutral-200 dark:hover:text-neutral-400">
                                 {link}
                               </span>
                             </Link>
