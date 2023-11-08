@@ -231,7 +231,7 @@ const Home: NextPage = () => {
                             <Link
                               key={index}
                               href={link}
-                              className="w-fit"
+                              className="block w-fit"
                               target="_blank"
                             >
                               <span className="block w-fit text-sm text-neutral-900 underline hover:text-neutral-500 dark:text-neutral-200 dark:hover:text-neutral-400">

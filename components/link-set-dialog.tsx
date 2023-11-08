@@ -165,12 +165,7 @@ export function DeleteLinkSetDialog({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose
-              className={cn(
-                buttonVariants({ variant: "outline" }),
-                "mt-2 sm:mt-0"
-              )}
-            >
+            <DialogClose className={cn(buttonVariants({ variant: "outline" }))}>
               Cancel
             </DialogClose>
             <Button
